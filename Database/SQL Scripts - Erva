@@ -1,1 +1,305 @@
 
+--
+-- PostgreSQL database dump
+--
+
+\restrict b5Th6udXygpMYgLGqivbtgOxpwR5upMR7tbaGajXXas7X0zv32N4zwIORR3r3wP
+
+-- Dumped from database version 16.13
+-- Dumped by pg_dump version 16.13
+
+-- Started on 2026-04-19 00:04:09
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- TOC entry 218 (class 1259 OID 16407)
+-- Name: inventory_logs; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.inventory_logs (
+    id integer NOT NULL,
+    product_id integer,
+    change_amount integer NOT NULL,
+    change_type character varying(50),
+    log_date timestamp without time zone DEFAULT CURRENT_TIMESTAMP
+);
+
+
+ALTER TABLE public.inventory_logs OWNER TO postgres;
+
+--
+-- TOC entry 217 (class 1259 OID 16406)
+-- Name: inventory_logs_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.inventory_logs_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.inventory_logs_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 4913 (class 0 OID 0)
+-- Dependencies: 217
+-- Name: inventory_logs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.inventory_logs_id_seq OWNED BY public.inventory_logs.id;
+
+
+--
+-- TOC entry 220 (class 1259 OID 16420)
+-- Name: orders; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.orders (
+    id integer NOT NULL,
+    product_id integer,
+    order_quantity integer,
+    status character varying(50) DEFAULT 'Bekliyor'::character varying,
+    order_date date DEFAULT CURRENT_DATE
+);
+
+
+ALTER TABLE public.orders OWNER TO postgres;
+
+--
+-- TOC entry 219 (class 1259 OID 16419)
+-- Name: orders_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.orders_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.orders_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 4914 (class 0 OID 0)
+-- Dependencies: 219
+-- Name: orders_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.orders_id_seq OWNED BY public.orders.id;
+
+
+--
+-- TOC entry 216 (class 1259 OID 16400)
+-- Name: products; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.products (
+    id integer NOT NULL,
+    product_name character varying(255),
+    initial_stock integer,
+    daily_sales_rate integer,
+    lead_time_days integer,
+    unit_cost numeric(10,2),
+    ordering_cost numeric(10,2),
+    holding_cost numeric(10,2),
+    safety_stock numeric(10,2),
+    rop numeric(10,2),
+    eoq integer
+);
+
+
+ALTER TABLE public.products OWNER TO postgres;
+
+--
+-- TOC entry 215 (class 1259 OID 16399)
+-- Name: products_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.products_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.products_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 4915 (class 0 OID 0)
+-- Dependencies: 215
+-- Name: products_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.products_id_seq OWNED BY public.products.id;
+
+
+--
+-- TOC entry 4746 (class 2604 OID 16410)
+-- Name: inventory_logs id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.inventory_logs ALTER COLUMN id SET DEFAULT nextval('public.inventory_logs_id_seq'::regclass);
+
+
+--
+-- TOC entry 4748 (class 2604 OID 16423)
+-- Name: orders id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.orders ALTER COLUMN id SET DEFAULT nextval('public.orders_id_seq'::regclass);
+
+
+--
+-- TOC entry 4745 (class 2604 OID 16403)
+-- Name: products id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.products ALTER COLUMN id SET DEFAULT nextval('public.products_id_seq'::regclass);
+
+
+--
+-- TOC entry 4905 (class 0 OID 16407)
+-- Dependencies: 218
+-- Data for Name: inventory_logs; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.inventory_logs (id, product_id, change_amount, change_type, log_date) FROM stdin;
+\.
+
+
+--
+-- TOC entry 4907 (class 0 OID 16420)
+-- Dependencies: 220
+-- Data for Name: orders; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.orders (id, product_id, order_quantity, status, order_date) FROM stdin;
+\.
+
+
+--
+-- TOC entry 4903 (class 0 OID 16400)
+-- Dependencies: 216
+-- Data for Name: products; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.products (id, product_name, initial_stock, daily_sales_rate, lead_time_days, unit_cost, ordering_cost, holding_cost, safety_stock, rop, eoq) FROM stdin;
+1	White Sugar 1kg	101	14	4	12.68	33.96	2.54	\N	\N	\N
+2	Black Tea 500g	118	10	1	128.45	27.67	25.69	\N	\N	\N
+3	Sunflower Oil 1L	171	6	2	148.19	37.05	29.64	\N	\N	\N
+4	Wheat Flour 2kg	142	3	3	44.03	32.05	8.81	\N	\N	\N
+5	Rice 1kg	163	4	5	17.79	37.49	3.56	\N	\N	\N
+6	Lentils 1kg	140	9	4	21.07	25.19	4.21	\N	\N	\N
+7	Pasta 500g	149	15	5	121.26	33.04	24.25	\N	\N	\N
+8	Tomato Paste 830g	180	10	2	36.06	42.06	7.21	\N	\N	\N
+9	Salt 750g	186	4	3	61.89	48.30	12.38	\N	\N	\N
+10	Coffee 100g	126	4	5	28.86	27.90	5.77	\N	\N	\N
+11	Milk 1L	175	11	1	67.69	35.61	13.54	\N	\N	\N
+12	Butter 250g	76	12	3	11.23	46.29	2.25	\N	\N	\N
+13	Eggs 15-pack	136	4	2	75.32	36.95	15.06	\N	\N	\N
+14	Cheese 500g	108	5	3	83.18	46.83	16.64	\N	\N	\N
+15	Olive Oil 1L	139	10	5	38.78	46.60	7.76	\N	\N	\N
+\.
+
+
+--
+-- TOC entry 4916 (class 0 OID 0)
+-- Dependencies: 217
+-- Name: inventory_logs_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.inventory_logs_id_seq', 1, false);
+
+
+--
+-- TOC entry 4917 (class 0 OID 0)
+-- Dependencies: 219
+-- Name: orders_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.orders_id_seq', 1, false);
+
+
+--
+-- TOC entry 4918 (class 0 OID 0)
+-- Dependencies: 215
+-- Name: products_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.products_id_seq', 15, true);
+
+
+--
+-- TOC entry 4754 (class 2606 OID 16413)
+-- Name: inventory_logs inventory_logs_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.inventory_logs
+    ADD CONSTRAINT inventory_logs_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 4756 (class 2606 OID 16427)
+-- Name: orders orders_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.orders
+    ADD CONSTRAINT orders_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 4752 (class 2606 OID 16405)
+-- Name: products products_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.products
+    ADD CONSTRAINT products_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 4757 (class 2606 OID 16414)
+-- Name: inventory_logs inventory_logs_product_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.inventory_logs
+    ADD CONSTRAINT inventory_logs_product_id_fkey FOREIGN KEY (product_id) REFERENCES public.products(id);
+
+
+--
+-- TOC entry 4758 (class 2606 OID 16428)
+-- Name: orders orders_product_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.orders
+    ADD CONSTRAINT orders_product_id_fkey FOREIGN KEY (product_id) REFERENCES public.products(id);
+
+
+-- Completed on 2026-04-19 00:04:09
+
+--
+-- PostgreSQL database dump complete
+--
+
+\unrestrict b5Th6udXygpMYgLGqivbtgOxpwR5upMR7tbaGajXXas7X0zv32N4zwIORR3r3wP
+
