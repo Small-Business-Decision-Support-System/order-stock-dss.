@@ -7,7 +7,7 @@ app = FastAPI(title="DSS Inventory API", version="1.0")
 def read_root():
     return {"message": "Welcome to DSS Inventory API. Backend is running!"}
 
-# --- Abdourahman: Buraya ROP ve EOQ hesaplayan ve veritabanına bağlanan endpoint'leri ekleyebilirsin ---
+
 
 @app.get("/api/status")
 def get_status():
