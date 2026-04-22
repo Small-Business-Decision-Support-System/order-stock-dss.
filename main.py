@@ -7,21 +7,20 @@ import numpy as np
 from datetime import datetime
 from dotenv import load_dotenv
 
-# .env dosyasından bağlantı bilgilerini yükle
+# .env dosyasından bağlantı bilgilerini 
 load_dotenv()
 
 app = FastAPI(title="DSS Inventory API", version="1.0")
 
-# ─────────────────────────────────────────
-# SABİTLER — Yaren'in formüllerinden
-# ─────────────────────────────────────────
+# Yaren'in formüllerinden
+
 Z = 1.645        # %95 servis düzeyi
 CV = 0.20        # Talep değişkenlik katsayısı
 DAYS_PER_YEAR = 365
 
-# ─────────────────────────────────────────
+
 # VERİTABANI BAĞLANTISI
-# ─────────────────────────────────────────
+
 def get_db():
     # .env dosyasındaki bilgilerle PostgreSQL'e bağlan
     conn = psycopg2.connect(
@@ -33,9 +32,9 @@ def get_db():
     )
     return conn
 
-# ─────────────────────────────────────────
-# YAREN'İN FORMÜLLERI — Hesaplama fonksiyonu
-# ─────────────────────────────────────────
+
+# YAREN'İN FORMÜLLERI Hesaplama fonksiyonu
+
 def calculate_metrics(product: dict) -> dict:
     d = product["daily_sales_rate"]   # günlük satış hızı
     L = product["lead_time_days"]     # teslim süresi
@@ -44,21 +43,21 @@ def calculate_metrics(product: dict) -> dict:
     P = product["unit_cost"]          # birim fiyat
     I = product["initial_stock"]      # başlangıç stoğu
 
-    # LTD — Sipariş teslim süresi talebi
+    #  Sipariş teslim süresi talebi
     LTD = d * L
 
-    # SS — Emniyet stoğu
+    # Emniyet stoğu
     sigma_d = CV * d
     SS = round(Z * sigma_d * np.sqrt(L), 1)
 
-    # ROP — Yeniden sipariş noktası
+    # Yeniden sipariş noktası
     ROP = round(LTD + SS, 0)
 
-    # EOQ — Ekonomik sipariş miktarı
+    # EOQ Ekonomik sipariş miktarı
     D_annual = d * DAYS_PER_YEAR
     EOQ = round(np.sqrt(2 * D_annual * S / H), 0) if H > 0 else None
 
-    # TC — Toplam yıllık maliyet
+    #  Toplam yıllık maliyet
     TC = round(D_annual * P + (D_annual / EOQ) * S + (EOQ / 2) * H, 0) if EOQ else None
 
     # Tampon ve durum
@@ -96,9 +95,8 @@ def read_root():
 def get_status():
     return {"status": "ok", "database": "connected"}
 
-# ─────────────────────────────────────────
-# GET /products — Tüm ürünleri + hesaplamaları getir
-# ─────────────────────────────────────────
+# GET /products Tüm ürünleri + hesaplamaları getir
+
 @app.get("/products")
 def get_products():
     try:
@@ -110,7 +108,7 @@ def get_products():
         cur.close()
         conn.close()
 
-        # Her ürün için Yaren'in formülleriyle hesapla
+        # Her ürün için Yaren'in formülleriyle hesapladım
         products = []
         for row in rows:
             row = dict(row)
@@ -122,9 +120,8 @@ def get_products():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# ─────────────────────────────────────────
-# POST /inventory/update — Stok güncelle
-# ─────────────────────────────────────────
+
+# POST /inventory/update Stok güncelle
 @app.post("/inventory/update")
 def update_inventory(payload: InventoryUpdate):
     try:
