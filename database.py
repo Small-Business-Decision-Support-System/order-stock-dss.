@@ -1,15 +1,17 @@
-# database.py — handles the connection to our PostgreSQL database
+import psycopg2
+import os
+from dotenv import load_dotenv
 
-import psycopg2  
-# psycopg2 is the library that lets Python communicate with PostgreSQL
+# .env dosyasından bağlantı bilgilerini yükle
+load_dotenv()
 
 def get_connection():
-    # this function creates a new connection to the database every time it's called
+    # Render'daki uzak veritabanına bağlan
     conn = psycopg2.connect(
-        host="localhost",        # the server where our database lives
-        database="inventory_db", # the name of our database
-        user="postgres",         # the username to access the database
-        password="your_password" # the password — Sedra will give you this
+        host=os.getenv("DB_HOST"),
+        database=os.getenv("DB_NAME"),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD"),
+        port=os.getenv("DB_PORT", 5432)
     )
-    return conn  
-    # we return the connection so other files can use it
+    return conn
